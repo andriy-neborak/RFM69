@@ -32,13 +32,9 @@
 #define RFM69_h
 
 
+
+
 #define RF69_MAX_DATA_LEN       61 // to take advantage of the built in AES/CRC we want to limit the frame size to the internal FIFO size (66 bytes - 3 bytes overhead - 2 bytes crc)
-#define RF69_SPI_CS             SS // SS is the SPI slave select pin, for instance D10 on ATmega328
-
-
-#define RF69_IRQ_PIN          2
-#define RF69_IRQ_NUM          0  
-
 
 #define CSMA_LIMIT              -90 // upper RX signal sensitivity threshold in dBm for carrier sense access
 #define RF69_MODE_SLEEP         0 // XTAL OFF
@@ -65,17 +61,32 @@
 #define RFM69_CTL_REQACK    0x40
 
 // 
-#define ISRFM69HW  1
+#define ISRFM69HW  0
 
 // module interface, platform specific
-extern void noInterrupts();                // function to disable interrupts
-extern void interrupts();                  // function to enable interrupts
-extern void RFM69_SetCSPin(bool);          // function to control the GPIO tied to RFM69 chip select (parameter HIGH or LOW)
-extern bool RFM69_ReadDIO0Pin(void);       // function to read GPIO connected to RFM69 DIO0 (RFM69 interrupt signalling)
-extern uint8_t SPI_transfer8(uint8_t);     // function to transfer 1byte on SPI with readback
-extern void Serialprint(char*);            // function to print to serial port a string
-extern bool Timeout_IsTimeout1(void);      // function for timeout handling, checks if previously set timeout expired
-extern void Timeout_SetTimeout1(uint16_t); // function for timeout handling, sets a timeout, parameter is in milliseconds (ms)
+extern void noInterrupts();                 // function to disable interrupts
+extern void interrupts();                   // function to enable interrupts
+extern void RFM69_SetCSPin(bool state);     // function to control the GPIO tied to RFM69 chip select (parameter HIGH or LOW)
+extern bool RFM69_ReadDIO0Pin(void);        // function to read GPIO connected to RFM69 DIO0 (RFM69 interrupt signalling)
+extern uint8_t SPI_transfer8(uint8_t data); // function to transfer 1byte on SPI with readback
+extern bool RFM69_IsTimeout(void);          // function for timeout handling, checks if previously set timeout expired
+extern void RFM69_SetTimeout(uint16_t ms);  // function for timeout handling, sets a timeout, parameter is in milliseconds (ms)
+extern void RFM69_TimerTick(void);
     
+
+bool RFM69_initialize(uint8_t freqBand, uint8_t nodeID, uint16_t networkID);
+uint8_t RFM69_receiveDone(uint8_t *p_buf);
+void RFM69_send(uint8_t toAddress, const void* buffer, uint8_t bufferSize, bool requestACK);
+void RFM69_interruptHandler(void);
+void RFM69_encrypt(const char* key);
+void RFM69_sleep(void);
+
+void RFM69_setHighPower(bool onOff);
+bool RFM69_ACKReceived(uint8_t fromNodeID);
+void RFM69_sendACK(const void* buffer, uint8_t bufferSize);
+
+bool RFM69_sendWithRetry(uint8_t toAddress, const void* buffer, uint8_t bufferSize, uint8_t retries, uint8_t retryWaitTime);
+bool RFM69_ACKRequested(void);
+
 
 #endif
