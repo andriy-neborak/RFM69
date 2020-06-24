@@ -25,18 +25,6 @@ Supports RFM69W, RFM69HW, RFM69CW, RFM69HCW (semtech SX1231, SX1231H)
 - `extern void RFM69_SetCSPin(bool);`       function to control the GPIO connected to RFM69 chip select (HIGH or LOW)
 - `extern bool RFM69_ReadDIO0Pin(void);`    function to read GPIO connected to RFM69 DIO0 (RFM69 interrupt signalling)
 - `extern uint8_t SPI_transfer8(uint8_t);`  function to transfer 1byte on SPI with readback
-<<<<<<< HEAD
 - `extern bool RFM69_IsTimeout(void);`   function for timeout handling, checks if previously set timeout expired
 - `extern void RFM69_SetTimeout(uint16_t);` function for timeout handling, sets a timeout, parameter is in milliseconds (ms)
 
-
-
-
-=======
-- `extern bool Timeout_IsTimeout1(void);`   function for timeout handling, checks if previously set timeout expired
-- `extern void Timeout_SetTimeout1(uint16_t);` function for timeout handling, sets a timeout, parameter is in milliseconds (ms)
-
-
-
-
->>>>>>> 14b89c1ca8c6ced6bed3370544624275b127b3c2
